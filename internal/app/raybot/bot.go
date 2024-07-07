@@ -1,13 +1,14 @@
 package raybot
 
 import (
-	"raybot/internal/service"
+	"context"
 	"time"
 
 	tele "gopkg.in/telebot.v3"
 
 	"raybot/internal/conf"
 	"raybot/internal/handler"
+	"raybot/internal/service"
 )
 
 var (
@@ -20,6 +21,7 @@ var (
 func NewRayBot(
 	poolHandler *handler.PoolHandler,
 ) *RayBot {
+	ctx := context.Background()
 	pref := tele.Settings{
 		Token:     conf.Config.BotToken,
 		Poller:    &tele.LongPoller{Timeout: 10 * time.Second},
@@ -33,22 +35,22 @@ func NewRayBot(
 
 	b.Handle("/start", poolHandler.HelpHandler)
 	b.Handle("/help", poolHandler.HelpHandler)
-	b.Handle("/allpool", func(c tele.Context) error {
-		return poolHandler.PoolHandler(c, service.PoolType_ALL)
+	b.Handle("/allpools", func(c tele.Context) error {
+		return poolHandler.PoolHandler(ctx, c, service.PoolType_ALL)
 	})
 	b.Handle("/concentratedpools", func(c tele.Context) error {
-		return poolHandler.PoolHandler(c, service.PoolType_CONCENTRATED)
+		return poolHandler.PoolHandler(ctx, c, service.PoolType_CONCENTRATED)
 	})
 	b.Handle("/standardpools", func(c tele.Context) error {
-		return poolHandler.PoolHandler(c, service.PoolType_STANDARD)
+		return poolHandler.PoolHandler(ctx, c, service.PoolType_STANDARD)
 	})
 	b.Handle(&btnPrev, func(c tele.Context) error {
 		c.Message().Payload = c.Callback().Data
-		return poolHandler.PoolHandler(c, "")
+		return poolHandler.PoolHandler(ctx, c, "")
 	})
 	b.Handle(&btnNext, func(c tele.Context) error {
 		c.Message().Payload = c.Callback().Data
-		return poolHandler.PoolHandler(c, "")
+		return poolHandler.PoolHandler(ctx, c, "")
 	})
 
 	return &RayBot{

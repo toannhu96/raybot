@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"time"
 
 	"github.com/getnimbus/ultrago/u_graceful"
 	"github.com/getnimbus/ultrago/u_logger"
-	"github.com/getnimbus/ultrago/u_monitor"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -43,11 +41,7 @@ func (a *app) Start(ctx context.Context) error {
 		logger.Fatalf("failed to listen http port %s: %v", HTTP_PORT, err)
 	}
 
-	// for monitoring memory
-	go u_monitor.Monitor(ctx, 30*time.Second)
-
 	eg, childCtx := errgroup.WithContext(ctx)
-
 	// start bot
 	eg.Go(func() error {
 		return u_graceful.BlockListen(childCtx, func() error {

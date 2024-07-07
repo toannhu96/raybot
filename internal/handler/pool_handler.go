@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/getnimbus/ultrago/u_logger"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/samber/lo"
 	"github.com/slongfield/pyfmt"
@@ -35,13 +36,16 @@ func (h *PoolHandler) HelpHandler(c tele.Context) error {
 The premium bot is here to help you discovery all LP on Raydium without headache 🚀
 
 
-/allpool - Show all liquidity pools
+/allpools - Show all liquidity pools
 /concentratedpools - Show concentrated liquidity pools
 /standardpools - Show standard liquidity pools
 `)
 }
 
-func (h *PoolHandler) PoolHandler(c tele.Context, poolType service.PoolType) error {
+func (h *PoolHandler) PoolHandler(ctx context.Context, c tele.Context, poolType service.PoolType) error {
+	ctx, logger := u_logger.GetLogger(ctx)
+	logger.Infof("User id %d - username %s requested pool data %s", c.Sender().ID, c.Sender().Username, string(poolType))
+
 	var (
 		split = strings.Split(c.Message().Payload, " ")
 		page  int

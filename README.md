@@ -1,6 +1,6 @@
 # Raybot
 
-Telegram bot on Raydium
+Telegram bot on Raydium written in Go
 
 ## How to use
 
@@ -25,4 +25,5 @@ https://www.loom.com/share/670fe06248534169840c3698c06aea01?sid=5a9629b8-2058-43
 ## Contact
 
 Email: toanbk21096@gmail.com \
+Twitter: @toannhu21096 \
 Telegram: toannhu96
