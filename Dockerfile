@@ -35,5 +35,9 @@ RUN cp /usr/share/zoneinfo/UTC /etc/localtime
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /src/out /bin/
 
+HEALTHCHECK --interval=30s --timeout=30s --retries=5 --start-period=30s CMD curl -f http://localhost:8081/ || exit 1
+
+EXPOSE 8081
+
 # Command to run the executable
 CMD ["tini", "--", "/bin/raybot"]
