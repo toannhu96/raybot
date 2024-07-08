@@ -44,7 +44,6 @@ The premium bot is here to help you discovery all LP on Raydium without headache
 
 func (h *PoolHandler) PoolHandler(ctx context.Context, c tele.Context, poolType service.PoolType) error {
 	ctx, logger := u_logger.GetLogger(ctx)
-	logger.Infof("User id %d - username %s requested pool data %s", c.Sender().ID, c.Sender().Username, string(poolType))
 
 	var (
 		split = strings.Split(c.Message().Payload, " ")
@@ -60,6 +59,8 @@ func (h *PoolHandler) PoolHandler(ctx context.Context, c tele.Context, poolType 
 	if len(split) > 1 {
 		poolType = service.PoolType(split[1])
 	}
+
+	logger.Infof("User id %d - username %s requested pool data %s", c.Sender().ID, c.Sender().Username, string(poolType))
 
 	// get pools data
 	poolData, err := h.svc.GetPools(context.Background(), poolType, page)

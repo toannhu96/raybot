@@ -48,7 +48,7 @@ type RaydiumService struct {
 func (svc *RaydiumService) GetPools(ctx context.Context, poolType PoolType, page int) (*PoolQueryData, error) {
 	ctx, logger := u_logger.GetLogger(ctx)
 
-	queryData, err, _ := caching.MemoizeFunc("pools", map[string]interface{}{
+	queryData, err, hit := caching.MemoizeFunc("pools", map[string]interface{}{
 		"poolType": poolType,
 		"page":     page,
 	}, func() (interface{}, error) {
@@ -93,6 +93,8 @@ func (svc *RaydiumService) GetPools(ctx context.Context, poolType PoolType, page
 		logger.Errorf("failed to get pools: %v", err)
 		return nil, err
 	}
+
+	logger.Debugf("hit cache: %v", hit)
 
 	return queryData.(*PoolQueryData), nil
 }
